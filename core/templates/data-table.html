@@ -1,0 +1,330 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+{% load static %}
+
+<style>
+
+	.circle {
+			display: inline-block;
+			margin: 1em;
+			font-size: 22px;
+	}
+
+</style>
+
+<script>
+
+	var count_days = {{ count_days | safe }};
+	var count_events = {{ count_events | safe }};
+	var count_places = {{ count_places | safe }};
+	var days = {{ days | safe }};
+	var poblations = {{ poblations | safe }};
+	var aforo_total = {{ aforo_total | safe }};
+	var my_query_days_aforo = {{ my_query_days_aforo | safe }};
+
+	
+</script>
+
+			
+	<div class="content">
+		<div class="panel-header bg-primary-gradient">
+			<div class="page-inner py-5">
+				<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+					<div>
+						<h2 class="text-white pb-2 fw-bold">Datos</h2>
+					</div>
+					<div class="ml-md-auto py-2 py-md-0">
+						<a href="{% url 'home' %}" class="btn btn-secondary btn-round">Ver dashboard</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="page-inner mt--5">
+			<div class="row mt--2">
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-body">
+							<div class="card-title">Estadisticas del filtrado</div>
+							<div class="card-category">Información destacada</div>
+							<div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+								<div class="px-2 pb-2 pb-md-0 text-center">
+									<div id="circles-1"></div>
+									<h6 class="fw-bold mt-3 mb-0">Dias</h6>
+								</div>
+								<div class="px-2 pb-2 pb-md-0 text-center">
+									<div id="circles-2"></div>
+									<h6 class="fw-bold mt-3 mb-0">Eventos</h6>
+								</div>
+								<div class="px-2 pb-2 pb-md-0 text-center">
+									<div id="circles-3"></div>
+									<h6 class="fw-bold mt-3 mb-0">Lugares</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-body">
+							<div class="card-title">Estadisticas de aforo por dias</div>
+							<div class="row py-3">
+								<div class="col-md-4 d-flex flex-column justify-content-around">
+									<div>
+										<h6 class="fw-bold text-uppercase text-success op-8">Media de aforo por dias</h6>
+										<h3 class="fw-bold">{{media_aforo}} personas</h3>
+									</div>
+									<div>
+										<h6 class="fw-bold text-uppercase text-danger op-8">Total aforo para los dias seleccionados</h6>
+										<h3 class="fw-bold">{{total_aforo}} personas</h3>
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div id="chart-container">
+										<canvas id="totalIncomeChart"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="content">
+				<div class="page-inner">
+					<div class="page-header">
+						<h4 class="page-title">Listado de eventos</h4>
+						<ul class="breadcrumbs">
+							<li class="nav-home">
+								<a href="#">
+									<i class="flaticon-home"></i>
+								</a>
+							</li>
+							<li class="separator">
+								<i class="flaticon-right-arrow"></i>
+							</li>
+							<li class="nav-item">
+								<a href="#">Tables</a>
+							</li>
+							<li class="separator">
+								<i class="flaticon-right-arrow"></i>
+							</li>
+							<li class="nav-item">
+								<a href="#">Datatables</a>
+							</li>
+						</ul>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Basic</h4>
+								</div>
+								<div class="card-body">
+									<div class="table-responsive">
+										<table id="basic-datatables" class="display table table-striped table-hover" >
+											<thead>
+												<tr>
+													<th>Fecha</th>
+													<th>Evento</th>
+													<th>Categoría</th>
+													<th>Lugar</th>
+													<th>Dirección</th>
+													<th>Aforo</th>
+													<th>Población</th>
+													<th>C. postal</th>
+													<th>Provincia</th>
+													<th>Audiencia</th>
+													<th>Precio</th>
+													<th>Horario</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th>Fecha</th>
+													<th>Evento</th>
+													<th>Categoría</th>
+													<th>Lugar</th>
+													<th>Dirección</th>
+													<th>Aforo</th>
+													<th>Población</th>
+													<th>C. postal</th>
+													<th>Provincia</th>
+													<th>Audiencia</th>
+													<th>Precio</th>
+													<th>Horario</th>
+												</tr>
+											</tfoot>
+											<tbody>
+												{% for total_data in total_data %} 
+												<tr>
+												  <td>{{total_data.Fecha}}</td>
+												  <td>{{total_data.Evento}}</td>
+												  <td>{{total_data.Categoría}}</td>
+												  <td>{{total_data.Lugar}}</td>
+												  <td>{{total_data.Dirección}}</td>
+												  <td>{{total_data.Aforo}}</td>
+												  <td>{{total_data.Población}}</td>
+												  <td>{{total_data.C_postal}}</td>
+												  <td>{{total_data.Provincia}}</td>
+												  <td>{{total_data.Audiencia}}</td>
+												  <td>{{total_data.Precio}}</td>
+												  <td>{{total_data.Horario}}</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+	<!-- Atlantis DEMO methods, don't include it in your project! -->
+	<script src="/static/assets/js/setting-demo.js"></script>
+	<script src="/static/assets/js/demo.js"></script>
+
+	<script>
+
+		Circles.create({
+			id:'circles-1',
+			radius:45,
+			value:60,
+			maxValue:100,
+			width:7,
+			text: count_days ,
+			colors:['#f1f1f1', '#FF9E27'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		Circles.create({
+			id:'circles-2',
+			radius:45,
+			value:70,
+			maxValue:100,
+			width:7,
+			text: count_events ,
+			colors:['#f1f1f1', '#2BB930'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		Circles.create({
+			id:'circles-3',
+			radius:45,
+			value:40,
+			maxValue:100,
+			width:7,
+			text: count_places ,
+			colors:['#f1f1f1', '#F25961'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		var totalIncomeChart = document.getElementById('totalIncomeChart').getContext('2d');
+
+		var mytotalIncomeChart = new Chart(totalIncomeChart, {
+			type: 'bar',
+			data: {
+				labels: days,
+				datasets : [{
+					label: "Total de aforo ",
+					backgroundColor: '#ff9e27',
+					borderColor: 'rgb(23, 125, 255)',
+					data: my_query_days_aforo,
+				}],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					display: false,
+				},
+				scales: {
+					yAxes: [{
+						ticks: {
+							display: false //this will remove only the label
+						},
+						gridLines : {
+							drawBorder: false,
+							display : false
+						}
+					}],
+					xAxes : [ {
+						gridLines : {
+							drawBorder: false,
+							display : false
+						}
+					}]
+				},
+			}
+		});
+
+		$('#lineChart').sparkline([105,103,123,100,95,105,115], {
+			type: 'line',
+			height: '70',
+			width: '100%',
+			lineWidth: '2',
+			lineColor: '#ffa534',
+			fillColor: 'rgba(255, 165, 52, .14)'
+		});
+
+
+		$(document).ready(function() {
+			$('#basic-datatables').DataTable({
+			});
+
+			$('#multi-filter-select').DataTable( {
+				"pageLength": 5,
+				initComplete: function () {
+					this.api().columns().every( function () {
+						var column = this;
+						var select = $('<select class="form-control"><option value=""></option></select>')
+						.appendTo( $(column.footer()).empty() )
+						.on( 'change', function () {
+							var val = $.fn.dataTable.util.escapeRegex(
+								$(this).val()
+								);
+
+							column
+							.search( val ? '^'+val+'$' : '', true, false )
+							.draw();
+						} );
+
+						column.data().unique().sort().each( function ( d, j ) {
+							select.append( '<option value="'+d+'">'+d+'</option>' )
+						} );
+					} );
+				}
+			});
+
+		});
+
+	
+
+	</script>
+
+{% endblock javascripts %}

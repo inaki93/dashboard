@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<title>
+        EventData | {% block title %}{% endblock %} 
+    </title>
+
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<link  href="/static/assets/img/event_data_logo2.png"/>
+	<link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-atlantis-dark">
+
+	<!-- Fonts and icons -->
+	<script src="/static/assets/js/plugin/webfont/webfont.min.js"></script>
+	<script>
+		WebFont.load({
+			google: {"families":["Lato:300,400,700,900"]},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], 
+			urls: ['/static/assets/css/fonts.min.css']},
+			active: function() {
+				sessionStorage.fonts = true;
+			}
+		});
+	</script>
+
+	<!-- CSS and JS Files -->
+	<link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/assets/css/atlantis.min.css">
+	<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtYgUpzwgY8Be6yrvKGxcd_cH1FSaDHAU&callback=initMap&libraries=visualization&v=weekly"
+	async></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+	<link rel="stylesheet" href="/static/assets/css/choices.min.css">
+
+
+	
+
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link rel="stylesheet" href="/static/assets/css/demo.css">
+
+    <!-- Specific Page CSS goes HERE  -->
+    {% block stylesheets %}{% endblock stylesheets %}
+
+</head>
+<body data-background-color="dark">
+	<div class="wrapper">
+
+        {% include 'includes/navigation.html' %}
+
+        {% include 'includes/sidebar.html' %}
+
+		<div class="main-panel">
+			
+			{% block content %}{% endblock content %}
+
+			{% include 'includes/footer.html' %}
+
+		</div>
+        
+		{% if request.user.is_authenticated %}
+
+			<!-- Custom template | don't include it in your project! -->
+			{% include 'includes/configuration-plugin.html' %}
+
+		{% endif %}		
+
+	</div>
+
+	{% include 'includes/scripts.html' %}
+
+    <!-- Specific Page JS goes HERE  -->
+	<script src="/static/assets/js/graficas_echarts.js"></script>
+	<script src="/static/assets/js/google_heatmap.js"></script>
+	<script src="/static/assets/js/choices.min.js"></script>
+    {% block javascripts %}
+	{% endblock javascripts %}
+
+</body>
+</html>

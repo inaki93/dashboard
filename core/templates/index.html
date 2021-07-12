@@ -1,0 +1,346 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+{% load static %}
+
+
+<script>
+	var audiencia = ['Todos los publicos', 'Mayores de 18 años', 'Mayores de 16 años'];
+	var hours = ['00:00 ', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
+	var price = ['Gratuito', '1€', '2€', '3€', '4€', '5€', '6€ ',
+			'7€', '8€', '9€','10€','11€',
+			'12€', '13€', '14€', '15€', '16€', '17€',
+			'18€ ', '19€', '20€', '21€', '22€', '23€','24€','25€','26€','27€','28€','29€','30€','31€','32€','33€','34€','35€',
+			'36€','37€','38€','39€','40€','41€','42€','43€','44€','A consultar'];
+	
+	var count_days = {{ count_days | safe }};
+	var count_events = {{ count_events | safe }};
+	var count_places = {{ count_places | safe }};
+	var days = {{ days | safe }};
+	var poblations = {{ poblations | safe }};
+	var total_aforo = {{ total_aforo | safe }};
+	var media_aforo = {{ media_aforo | safe }};
+	var my_query_days_aforo = {{ my_query_days_aforo | safe }};
+	var array_data_fgraph = {{array_data_fgraph | safe }};
+	var total_data = {{ total_data | safe }};
+	var latitud_longitud = {{ latitud_longitud | safe }};
+	var centro_coordinates = {{centro_coordinates | safe }};
+	var array_categories = {{array_categories | safe }};
+	var array_place_aforo = {{array_place_aforo | safe}};
+	var array_categorie_color = {{array_categorie_color | safe}};
+	var array_categories_legend = {{array_categories_legend | safe}};
+	var array_colores = {{array_colores | safe}};
+
+
+
+</script>
+			
+	<div class="content">
+		<div class="panel-header bg-primary-gradient">
+			<div class="page-inner py-5">
+				<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+					<div>
+						<h2 class="text-white pb-2 fw-bold">Dashboard</h2>
+					</div>
+					<div class="ml-md-auto py-2 py-md-0">
+						<a href="{% url 'data_table' %}" class="btn btn-secondary btn-round">Ver tabla de datos</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="page-inner mt--5">
+			<div class="row mt--2">
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-body">
+							<div class="card-title">Estadisticas del filtrado</div>
+							<div class="card-category">Información destacada</div>
+							<div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+								<div class="px-2 pb-2 pb-md-0 text-center">
+									<div id="circles-1"></div>
+									<h6 class="fw-bold mt-3 mb-0">Dias</h6>
+								</div>
+								<div class="px-2 pb-2 pb-md-0 text-center">
+									<div id="circles-2"></div>
+									<h6 class="fw-bold mt-3 mb-0">Eventos</h6>
+								</div>
+								<div class="px-2 pb-2 pb-md-0 text-center">
+									<div id="circles-3"></div>
+									<h6 class="fw-bold mt-3 mb-0">Lugares</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-body">
+							<div class="card-title">Estadisticas de aforo por dias</div>
+							<div class="row py-3">
+								<div class="col-md-4 d-flex flex-column justify-content-around">
+									<div>
+										<h6 class="fw-bold text-uppercase text-success op-8">Media de aforo por dias </h6>
+										<h3 class="fw-bold">{{media_aforo}} personas</h3>
+									</div>
+									<div>
+										<h6 class="fw-bold text-uppercase text-danger op-8">Total aforo para los dias seleccionados</h6>
+										<h3 class="fw-bold">{{total_aforo}} personas</h3>
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div id="chart-container">
+										<canvas id="totalIncomeChart"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-header">
+							<div class="card-title">Aforo por dias para las ciudades seleccionadas.</div>
+						</div>
+						<div class="card-body">
+							<div class="chart has-fixed-height has-minimum-width">
+								<div id="container_graph" style="position: relative; overflow: hidden; width: 768px; height: 400px;"></div>	
+							</div>	
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-header">
+							<div class="card-head-row">
+								<div class="card-title">Aforo y precio de los lugares por dias. </div>
+								<div class="card-tools">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a class="nav-link" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true"> < 4800 personas</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link active" id="pills-week" data-toggle="pill" href="#pills-week" role="tab" aria-selected="false"> > 4800 personas</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="d-flex">
+								<div class="card-body">
+									<div class="chart has-fixed-height has-minimum-width">
+										<div id="container_graph2" style="position: relative; overflow: hidden; width: 768px; height: 400px;"></div>	
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-header">
+							<div class="card-title">Numero de eventos por categoria y sus lugares por aforo.</div>
+						</div>
+						<div class="card-body">
+							<div class="chart has-fixed-height has-minimum-width">
+								<div id="container_graph5" style="position: relative; overflow: hidden; width: 768px; height: 400px;"></div>	
+							</div>	
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-header">
+							<div class="card-head-row">
+								<div class="card-title">Lugares destacados con varios eventos los dias seleccionados.</div>
+								<div class="card-tools">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a class="nav-link" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">Todos los publicos</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="pills-month" data-toggle="pill" href="#pills-month" role="tab" aria-selected="false"> > 18 años</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="d-flex">
+								<div class="chart has-fixed-height has-minimum-width">
+									<div id="container_graph4" style="position: relative; overflow: hidden; width: 768px; height: 400px;"></div>	
+								   </div>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">	
+								<div id="floating-panel">
+									<button onclick="toggleHeatmap()">Toggle Heatmap</button>
+									<button onclick="changeGradient()">Change gradient</button>
+									<button onclick="changeRadius()">Change radius</button>
+									<button onclick="changeOpacity()">Change opacity</button>
+								</div>
+								<div id="map"></div>
+				</div>	
+			</div>
+			<div class="row ms--3">
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-header">
+							<div class="card-title">Horas con mayor indice de eventos</div>
+						</div>
+						<div class="card-body">
+							<div class="chart has-fixed-height has-minimum-width">
+								<div id="container_graph3" style="position: relative; overflow: hidden; width: 768px; height: 400px;"></div>	
+							</div>	
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card full-height">
+						<div class="card-header">
+							<div class="card-head-row">
+								<div class="card-title">---------- DESARROLLAR-------------</div>
+								<div class="card-tools">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a class="nav-link" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">Todos los publicos</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="pills-month" data-toggle="pill" href="#pills-month" role="tab" aria-selected="false"> > 18 años</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="d-flex">
+								<div class="chart has-fixed-height has-minimum-width">
+									<div id="" style="position: relative; overflow: hidden; width: 768px; height: 400px;"></div>	
+								   </div>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+	<!-- Atlantis DEMO methods, don't include it in your project! -->
+	<script src="/static/assets/js/setting-demo.js"></script>
+	<script src="/static/assets/js/demo.js"></script>
+
+	<script>
+		Circles.create({
+			id:'circles-1',
+			radius:45,
+			value:60,
+			maxValue:100,
+			width:7,
+			text: count_days,
+			colors:['#f1f1f1', '#FF9E27'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		Circles.create({
+			id:'circles-2',
+			radius:45,
+			value:70,
+			maxValue:100,
+			width:7,
+			text: count_events,
+			colors:['#f1f1f1', '#2BB930'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		Circles.create({
+			id:'circles-3',
+			radius:45,
+			value:40,
+			maxValue:100,
+			width:7,
+			text: count_places,
+			colors:['#f1f1f1', '#F25961'],
+			duration:400,
+			wrpClass:'circles-wrp',
+			textClass:'circles-text',
+			styleWrapper:true,
+			styleText:true
+		})
+
+		var totalIncomeChart = document.getElementById('totalIncomeChart').getContext('2d');
+
+		var mytotalIncomeChart = new Chart(totalIncomeChart, {
+			type: 'bar',
+			data: {
+				labels: days ,
+				datasets : [{
+					label: "Total de aforo ",
+					backgroundColor: '#ff9e27',
+					borderColor: 'rgb(23, 125, 255)',
+					data: my_query_days_aforo,
+				}],
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					display: false,
+				},
+				scales: {
+					yAxes: [{
+						ticks: {
+							display: false //this will remove only the label
+						},
+						gridLines : {
+							drawBorder: false,
+							display : false
+						}
+					}],
+					xAxes : [ {
+						gridLines : {
+							drawBorder: false,
+							display : false
+						}
+					}]
+				},
+			}
+		});
+
+		$('#lineChart').sparkline([105,103,123,100,95,105,115], {
+			type: 'line',
+			height: '70',
+			width: '100%',
+			lineWidth: '2',
+			lineColor: '#ffa534',
+			fillColor: 'rgba(255, 165, 52, .14)'
+		});
+	</script>
+
+{% endblock javascripts %}

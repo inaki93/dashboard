@@ -1,0 +1,194 @@
+{% extends "layouts/base.html" %}
+{% load template_tags %}
+{% block title %} Mas filtro {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+	.mt-100 {
+		margin-top: 100px
+	}
+	
+	body {
+		background: #db2100;
+		background: -webkit-linear-gradient(to right, #db2100, #d8553d);
+		background: linear-gradient(to right, #db2100, #d8553d);
+		color: #514B64;
+		min-height: 100vh
+	}
+
+
+
+</style>
+
+<script>
+	$(document).ready(function(){
+
+		var multipleCancelButton = new Choices('#choices-multiple-remove-button2', {
+		removeItemButton: true,
+		maxItemCount:13,
+		searchResultLimit:13,
+		renderChoiceLimit:13
+		});	
+		
+	});
+
+	$(document).ready(function(){
+
+		var multipleCancelButton = new Choices('#choices-multiple-remove-button3', {
+		removeItemButton: true,
+		maxItemCount:4,
+		searchResultLimit:43,
+		renderChoiceLimit:43
+		});	
+		
+	});
+
+
+	console.log(total_data);
+
+</script>
+	<form method="POST" action="{% url 'home' %}" >
+	{% csrf_token %}
+	<div class="content">
+		<div class="page-inner">
+			<div class="page-header">
+				<h4 class="page-title">Filtrar campos</h4>
+				<ul class="breadcrumbs">
+					<li class="nav-home">
+						<a href="#">
+							<i class="flaticon-home"></i>
+						</a>
+					</li>
+					<li class="separator">
+						<i class="flaticon-right-arrow"></i>
+					</li>
+					<li class="nav-item">
+						<a href="#">Mas filtros</a>
+					</li>
+				</ul>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+				<form method="POST" action="{% url 'home' %}" >
+					{% csrf_token %}
+					<div class="card">
+						<div class="card-header">
+							<div class="card-title">Mas filtros</div>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-6">
+									<label for="exampleFormControlSelect1">Categorias</label>
+									<div class="form-group"> 
+										<select class="select_input"  id="choices-multiple-remove-button2" name="categories[]" placeholder="Select upto 5 tags"  multiple >
+											{% for categorie in categories %}
+											<option value='{{ categorie }}' selected> {{ categorie }}</option> 
+											{% endfor %}
+											{% for categoria in categorias %}
+											<option value='{{ categoria }}'> {{ categoria }}</option> 
+											{% endfor %}	
+										</select> 
+									</div>
+									<label for="exampleFormControlSelect1">Poblaciones</label>
+									<div class="form-group"> 
+										<label class="sr-only" for="date">Poblaciones</label>
+										<select class="select_input"  id="choices-multiple-remove-button3" name="poblations[]" placeholder="Select upto 5 tags" required="required" multiple >
+											{% for poblation in poblations %}
+											<option value='{{ poblation }}' selected> {{ poblation }}</option> 
+											{% endfor %} 
+											{% for poblacion in poblaciones %}
+											<option value='{{ poblacion }}'> {{ poblacion }}</option> 
+											{% endfor %} 	
+										</select> 
+									</div>
+									<div class="form-group">
+										<label for="exampleFormControlSelect1">Aforo</label>
+										<select class="form-control" id="exampleFormControlSelect1" name="aforo">
+											
+											<option value='{{ aforo  | translate_aforo_inverse }}' selected > {{ aforo }}</option> 
+											
+											{% for tipos_aforo in tipos_aforo %}
+											<option value='{{ tipos_aforo  | translate_aforo_inverse }}'> {{ tipos_aforo }}</option> 
+											{% endfor %} 	
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">	
+									<label for="exampleFormControlSelect1">Fecha inicio</label>
+									<div class="form-group">
+										<label class="sr-only" for="date">Fecha inicio</label>
+										<input class="form-control" id="date_inicio" name="date_inicio" placeholder="DD/MM/YYYY" type="date" value= '{{day_first}}' required/>
+									</div>
+									<label for="exampleFormControlSelect1">Fecha fin</label>
+									<div class="form-group">
+										<label class="sr-only" for="date">Fecha fin</label>
+										<input class="form-control" id="date_fin" name="date_fin" placeholder="DD/MM/YYYY" type="date" value= '{{day_last}}' required/>
+									</div>			
+									<div class="form-group">
+										<label class="form-label">Precio</label>
+										<div class="selectgroup w-100">
+											{% for precio in precio %}
+											
+											<label class="selectgroup-item">
+												{% for array_precio in array_precio %}
+												{% if precio == array_precio %}
+												<input type="checkbox" name="{{precio}}" value="{{precio}}" class="selectgroup-input" checked>
+												<span class="selectgroup-button">{{precio}} 1 </span>
+												{%endif%}
+												{%endfor%}
+												<input type="checkbox" name="{{precio}}" value="{{precio}}" class="selectgroup-input">
+												<span class="selectgroup-button">{{precio}} 2 </span>
+												
+												</label>
+										   
+										{%endfor%}
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="form-label">Audiencia</label>
+										<div class="selectgroup w-100">
+										{% for audiencia in audiencia %}
+											
+											<label class="selectgroup-item">
+												{% for array_audiencia in array_audiencia %}
+												{% if audiencia == array_audiencia %}
+												<input type="checkbox" name="{{audiencia}}" value="{{audiencia}}" class="selectgroup-input" checked>
+												<span class="selectgroup-button">{{audiencia}} 1 </span>
+												{%endif%}
+												{%endfor%}
+												<input type="checkbox" name="{{audiencia}}" value="{{audiencia}}" class="selectgroup-input">
+												<span class="selectgroup-button">{{audiencia}} 2 </span>
+												
+												</label>
+										   
+										{%endfor%}								 
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-action">
+							<button class="btn btn-success" style="float: right;">Filtrar</button>
+						</div>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+	<!-- Atlantis DEMO methods, don't include it in your project! -->
+	<script src="/static/assets/js/setting-demo2.js"></script>
+
+{% endblock javascripts %}	
