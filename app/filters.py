@@ -187,7 +187,7 @@ class General:
             event_Población = element['Población']
 
             geolocator = Nominatim(user_agent="optimizadata")
-            #geolocator = GoogleV3(api_key='AIzaSyA1EWrHdaa1UaJw3U8VuXKKucoqqp58ipo')
+            #geolocator = GoogleV3(api_key='GOOGLE_API_KEY')
             direccion = event_Dirección + ' ' + event_Población
             location = geolocator.geocode(direccion, timeout=None)
             direccion = ''
