@@ -5,10 +5,10 @@ from geopy.geocoders import GoogleV3, Nominatim
 
 
 mydb = mysql.connector.connect(
-    host="bpyzbzunzrblg9epu4fq-mysql.services.clever-cloud.com",
-    user="umkpqgglbv86bt2b",
-    password="Z4ywID6qw12VvND6F54T",
-    database="bpyzbzunzrblg9epu4fq"
+    host="XXXXXXXXXXXXXX",
+    user="XXXXXXXXXXXXX",
+    password="XXXXXXXXXXXXX",
+    database="XXXXXXXXXXXXX"
     )
 
 class General:
