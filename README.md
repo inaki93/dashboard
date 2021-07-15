@@ -1,1 +1,1 @@
-optimiazada web server
+ dashboard web server
