@@ -2,6 +2,7 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+print('prueba')
 
 from django.contrib import admin
 from django.urls import path, include  # add this
